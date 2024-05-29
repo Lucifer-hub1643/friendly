@@ -22,12 +22,12 @@ def loginPage(request):
         return redirect('home')
 
     if request.method == 'POST':
-        email = request.POST.get('email').lower()
+        email = request.POST.get('email').lower()  # Convert email to lowercase
         password = request.POST.get('password')
 
         try:
             user = User.objects.get(email=email)
-        except:
+        except User.DoesNotExist:
             messages.error(request, 'User does not exist')
 
         user = authenticate(request, email=email, password=password)
@@ -36,10 +36,11 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Username OR password does not exit')
+            messages.error(request, 'Username OR password does not exist')
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
+
 
 
 def logoutUser(request):
