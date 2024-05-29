@@ -6,7 +6,8 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic, Message, User
 from .forms import RoomForm, UserForm, MyUserCreationForm
-
+from django_ratelimit.decorators import ratelimit
+from .models import User
 # Create your views here.
 
 # rooms = [
@@ -114,6 +115,7 @@ def userProfile(request, pk):
 
 
 @login_required(login_url='login')
+@ratelimit(key='user', rate='3/m')
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
